@@ -65,3 +65,16 @@ function closeModal() {
 selectorAll('.pizzaInfo--cancelButton, .pizzaInfo--cancelMobileButton').forEach((item) => {
     item.addEventListener('click', closeModal);
 });
+
+selector('.pizzaInfo--qtmenos').addEventListener('click', () => {
+    if(modalQuantidade > 1) {
+        modalQuantidade--;    
+        selector('.pizzaInfo--qt').innerHTML = modalQuantidade;
+    }
+
+});
+
+selector('.pizzaInfo--qtmais').addEventListener('click', () => {
+    modalQuantidade++;
+    selector('.pizzaInfo--qt').innerHTML = modalQuantidade;
+});

@@ -9,6 +9,11 @@ pizzaJson.map((item, index) => {
     pizzaItem.querySelector('.pizza-item--desc').innerHTML = item.description; // add a descrição do item
     pizzaItem.querySelector('.pizza-item--price').innerHTML = `R$ ${item.price.toFixed(2)}`; // add o preço do item e fixa em 2 casas decimais após o ponto
 
+    pizzaItem.querySelector('a').addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log('Clicou na pizza')
+    })
+
 
     selector('.pizza-area').append(pizzaItem);
 });

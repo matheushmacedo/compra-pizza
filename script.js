@@ -1,4 +1,6 @@
 let modalQuantidade = 1;
+let carrinho = [];
+let modalKey = 0;
 const selector = (elemento) => document.querySelector(elemento);
 const selectorAll = (elemento) => document.querySelectorAll(elemento);
 
@@ -17,10 +19,12 @@ pizzaJson.map((item, index) => {
     pizzaItem.querySelector('a').addEventListener('click', (e) => {
         e.preventDefault(); // previne o comportamento padrao do click
         modalQuantidade = 1;
-
+        
         // CLOSEST -> como estou dentro do elemento "a" eu vou procurar o elemento ".pizza-item" mais prox dele, tanto dentro quanto fora do nó 
         // depois eu uso o GETATTRIBUTE para pegar o conteudo que esta no atributo DATA-KEY do item HTML
         let key = e.target.closest('.pizza-item').getAttribute('data-key');
+
+        modalKey = key; // mantem nessa variavel qual é a pizza que estou add
         
         // preencho o modal 
         selector('.pizzaBig img').src = pizzaJson[key].img;
@@ -51,7 +55,7 @@ pizzaJson.map((item, index) => {
     selector('.pizza-area').append(pizzaItem);
 });
 
-// Eventos do Modal
+// função para fechar o Modal
 function closeModal() {
     selector('.pizzaWindowArea').style.opacity = 0; 
     
@@ -77,4 +81,38 @@ selector('.pizzaInfo--qtmenos').addEventListener('click', () => {
 selector('.pizzaInfo--qtmais').addEventListener('click', () => {
     modalQuantidade++;
     selector('.pizzaInfo--qt').innerHTML = modalQuantidade;
+});
+
+selectorAll('.pizzaInfo--size').forEach((size, sizeIndex)=>{
+    size.addEventListener('click', (e) => {
+        // retira o selected do item
+        selector('.pizzaInfo--size.selected').classList.remove('selected');
+        size.classList.add('selected');
+    })
+});
+
+selector('.pizzaInfo--addButton').addEventListener('click', () => {
+    //let tamanhoTexto = selector('.pizzaInfo--size.selected').innerText;
+    let tamanho = parseInt(selector('.pizzaInfo--size.selected').getAttribute('data-key'));
+       
+    // serve para facilitar a pesquisa no array
+    let identificador = pizzaJson[modalKey].id+'@'+tamanho; 
+
+    // varre o array carrinho e se encontrar um identificador igual retorna o id que esta no carrinho 
+    let chave = carrinho.findIndex((item)=>item.identificador == identificador);
+
+    // quando nao encontra retorna -1
+    if(chave > -1) {
+        // encontrou entao soma + 1 na quantidade
+        carrinho[chave].qt += modalQuantidade;
+    } else {
+        // nao encontrou entao add normalmente
+        carrinho.push({
+            identificador,
+            id:pizzaJson[modalKey].id,
+            size:tamanho,
+            qt:modalQuantidade
+        });
+    }
+    closeModal();
 });

@@ -2,6 +2,7 @@ let modalQuantidade = 1;
 const selector = (elemento) => document.querySelector(elemento);
 const selectorAll = (elemento) => document.querySelectorAll(elemento);
 
+// Listagem dos Itens
 pizzaJson.map((item, index) => {
     let pizzaItem = selector('.models .pizza-item').cloneNode(true);
 
@@ -47,6 +48,20 @@ pizzaJson.map((item, index) => {
         }, 200); // espera 200 milisegundos para alterar a opacidade de 0 para 1
     });
 
-
     selector('.pizza-area').append(pizzaItem);
+});
+
+// Eventos do Modal
+function closeModal() {
+    selector('.pizzaWindowArea').style.opacity = 0; 
+    
+    // espera 500 milisegundos e depois muda o display para none fazendo sumir o modal
+    setTimeout(() => {
+        selector('.pizzaWindowArea').style.display = 'none'; 
+    }, 500);
+}
+
+// Chamando a funcao closeModal() e atribuindo um click nas classes de fechar
+selectorAll('.pizzaInfo--cancelButton, .pizzaInfo--cancelMobileButton').forEach((item) => {
+    item.addEventListener('click', closeModal);
 });

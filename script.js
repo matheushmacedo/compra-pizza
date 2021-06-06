@@ -114,5 +114,62 @@ selector('.pizzaInfo--addButton').addEventListener('click', () => {
             qt:modalQuantidade
         });
     }
+    atualizarCarrinho();
     closeModal();
 });
+
+function atualizarCarrinho () {
+    if(carrinho.length > 0) {
+        // mostra o carrinho de compras 
+        selector('aside').classList.add('show');
+        // zera a lista do carrinho sempre que abrir pra carregar novamente
+        selector('.cart').innerHTML = '';
+
+
+        // percorre o array carrinho passando por cada item
+        for(let i in carrinho) {
+            let pizzaItem = pizzaJson.find((item)=>item.id == carrinho[i].id);
+            // clona o HTML .cart--item
+            let carrinhoItem = selector('.models .cart--item').cloneNode(true);
+            // adiciona o item na tela
+
+            let pizzaSizeName;
+            switch(carrinho[i].size) {
+                case 0:
+                    pizzaSizeName = 'P';
+                    break;
+                case 1:
+                    pizzaSizeName = 'M';
+                    break;    
+                case 2:
+                    pizzaSizeName = 'G';
+                break;
+            }
+
+            let pizzaName = `${pizzaItem.name} (${pizzaSizeName})`;
+
+            carrinhoItem.querySelector('img').src = pizzaItem.img;
+            carrinhoItem.querySelector('.cart--item-nome').innerHTML = pizzaName;
+            carrinhoItem.querySelector('.cart--item--qt').innerHTML = carrinho[i].qt;
+
+            carrinhoItem.querySelector('.cart--item-qtmenos').addEventListener('click', ()=>{
+                if(carrinho[i].qt > 1) {
+                    carrinho[i].qt--;
+                } else {
+                    carrinho.splice(i,1);
+                }
+                atualizarCarrinho();
+            });
+            carrinhoItem.querySelector('.cart--item-qtmais').addEventListener('click', ()=>{
+                carrinho[i].qt++;
+                atualizarCarrinho();
+            });
+
+
+            
+            selector('.cart').append(carrinhoItem);
+        }
+    } else {
+        selector('aside').classList.remove('show');
+    }
+}
